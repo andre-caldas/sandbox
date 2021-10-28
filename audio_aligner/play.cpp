@@ -21,7 +21,7 @@ void play(const char *filename)
 		producer_x.set_in_and_out(2000, 4100);
 		producer_y.set_in_and_out(2000+lag, 4000+lag);
 
-		int max = std::max(producer_x.get_length(), producer_y.get_length());
+		int max = std::max(producer_x.get_playtime(), producer_y.get_playtime());
 
 		AudioEnvelopeFFT envelope_x(producer_x, max);
 		AudioEnvelopeFFT envelope_y(producer_y, max);
