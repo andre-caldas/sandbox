@@ -6,7 +6,7 @@
 
 using namespace Mlt;
 
-int lags[] = {10, 50, 51, 52, 53, -9, -10, -11, -50, 100, -90, 150};
+int lags[] = {10, -10, 50, 51, 52, 53, -9, -11, -12, -50, 100, -90, 150};
 
 void play(const char *filename)
 {
@@ -18,8 +18,8 @@ void play(const char *filename)
 
 		std::cout << "Lag: " << lag << " frames." << std::endl;
 
-		producer_x.set_in_and_out(2000, 4100);
-		producer_y.set_in_and_out(2000+lag, 4000+lag);
+		producer_x.set_in_and_out(200, 2246);
+		producer_y.set_in_and_out(200+lag, 2000+lag);
 
 		int max = std::max(producer_x.get_playtime(), producer_y.get_playtime());
 
