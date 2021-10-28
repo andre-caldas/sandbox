@@ -18,11 +18,13 @@ void play(const char *filename)
 
 		std::cout << "Lag: " << lag << " frames." << std::endl;
 
-		producer_x.set_in_and_out(2000, 4000);
+		producer_x.set_in_and_out(2000, 4100);
 		producer_y.set_in_and_out(2000+lag, 4000+lag);
 
-		AudioEnvelopeFFT envelope_x(producer_x);
-		AudioEnvelopeFFT envelope_y(producer_y);
+		int max = std::max(producer_x.get_length(), producer_y.get_length());
+
+		AudioEnvelopeFFT envelope_x(producer_x, max);
+		AudioEnvelopeFFT envelope_y(producer_y, max);
 
 		int calc_lag = envelope_x.get_lag_from(envelope_y);
 		std::cout << "Calculated lag: " << calc_lag << std::endl;
