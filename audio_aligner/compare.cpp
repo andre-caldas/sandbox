@@ -11,11 +11,11 @@ using namespace Mlt;
 
 void compare(const char *f1, const char *f2, const char* profile_id = nullptr)
 {
-  std::cout << "/=== PROFILE: " << profile_id << " ===" << std::endl;
   if(nullptr == profile_id)
   {
     profile_id = "atsc_1080p_60";
   }
+  std::cout << "/=== PROFILE: " << profile_id << " ===" << std::endl;
   Profile profile(profile_id);
 
   Producer producer_x(profile, f1);
