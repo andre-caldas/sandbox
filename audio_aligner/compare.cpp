@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <cmath>
 
@@ -10,7 +11,7 @@ using namespace Mlt;
 
 void compare(const char *f1, const char *f2, const char* profile_id = nullptr)
 {
-  std::cout << "=== PROFILE: " << profile_id << " ===" << std::endl;
+  std::cout << "/=== PROFILE: " << profile_id << " ===" << std::endl;
   if(nullptr == profile_id)
   {
     profile_id = "atsc_1080p_60";
@@ -22,10 +23,28 @@ void compare(const char *f1, const char *f2, const char* profile_id = nullptr)
 
   int max = std::max(producer_x.get_playtime(), producer_y.get_playtime());
 
+  auto start_time = std::chrono::steady_clock::now();
+  std::cout << "| Start extracting audio..." << std::endl;
   AudioEnvelopeFFT envelope_x(producer_x, max);
-  AudioEnvelopeFFT envelope_y(producer_y, max);
 
+  auto finished_x_time = std::chrono::steady_clock::now();
+  std::cout << "| Finished extracting first producer's audio."
+            << " Elapsed: " << (finished_x_time - start_time).count()/1000000 << " million ticks."
+            << std::endl;
+  AudioEnvelopeFFT envelope_y(producer_y, max);
+  auto finished_y_time = std::chrono::steady_clock::now();
+  std::cout << "| Finished extracting second producer's audio."
+            << " Elapsed: " << (finished_y_time - finished_x_time).count()/1000000 << " million ticks."
+            << std::endl;
+
+  auto start_fft_time = std::chrono::steady_clock::now();
+  std::cout << "| Will calculate lag." << std::endl;
   int calc_lag = envelope_x.get_lag_from(envelope_y);
+  auto finished_fft_time = std::chrono::steady_clock::now();
+  std::cout << "| Finished calculating lag."
+            << " Elapsed: " << (finished_fft_time - start_fft_time).count()/1000000 << " million ticks."
+            << std::endl;
+
   char sign = '+';
   if(calc_lag < 0)
   {
@@ -39,7 +58,7 @@ void compare(const char *f1, const char *f2, const char* profile_id = nullptr)
   int seconds = std::floor(calc_lag/(fps)) - 60*60*hours - 60*minutes;
   int frames = std::floor(calc_lag) - 60*60*fps*hours - 60*fps*minutes - fps*seconds;
 
-  std::cout << "=== RESULT (" << profile_id << ") ===" << std::endl;
+  std::cout << "\\=== RESULT (" << profile_id << ") ===" << std::endl;
   std::cout << "Calculated lag: " << sign << calc_lag << " frames. " << ((float)calc_lag) / fps << " seconds." << std::endl;
 
   std::cout << sign << hours << "h"
