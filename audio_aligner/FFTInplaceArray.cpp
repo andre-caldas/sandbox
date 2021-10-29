@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
-//#include <execution>
+#include <cstring>
+#include <cmath>
 #include <ranges>
 #include <cassert>
 
@@ -18,6 +19,7 @@ FFTInplaceArray::FFTInplaceArray(size_t minimum_size)
     init(minimum_size);
 }
 
+
 void FFTInplaceArray::init(size_t minimum_size)
 {
     m_MinimumSize = minimum_size;
@@ -32,7 +34,7 @@ FFTInplaceArray::~FFTInplaceArray(void)
 }
 
 
-int FFTInplaceArray::get_lag_from (FFTInplaceArray &from)
+int FFTInplaceArray::get_lag_from (FFTInplaceArray &from, double* quality)
 {
     FFTInplaceArray correlation = correlate_with(from);
 
@@ -48,6 +50,11 @@ int FFTInplaceArray::get_lag_from (FFTInplaceArray &from)
         }
     }
 
+    if(nullptr != quality)
+    {
+        *quality = max;
+    }
+
     // I don't know if this is correct.
     // But the transform is cyclic.
     // So, either we do something like this, or we double the buffer size.
@@ -59,16 +66,43 @@ int FFTInplaceArray::get_lag_from (FFTInplaceArray &from)
 }
 
 
+FFTInplaceArray FFTInplaceArray::clone(float drift)
+{
+    FFTInplaceArray result(m_MinimumSize);
+
+    if(0.0 == drift)
+    {
+        std::memcpy(envelope(), result.envelope(), m_MinimumSize * sizeof(std::complex<double>));
+    }
+    else
+    {
+        float factor = 1.0 + drift;
+
+        int shift = 0;
+        for(size_t i = 0; i < m_MinimumSize; ++i)
+        {
+            int new_shift = std::round(factor * i) - i;
+
+            while(new_shift > shift)
+            {
+                result.envelope(i+shift) = envelope(i);
+                ++shift;
+            }
+            result.envelope(i+shift) = envelope(i);
+        }
+    }
+
+    return result;
+}
+
+
 FFTInplaceArray& FFTInplaceArray::transform (void)
 {
-    std::cerr << "Transforming (" << this << ")...";
     if (!m_IsTransformed)
     {
-        std::cerr << " will execute...";
         m_IsTransformed = true;
         m_FFT->execute();
     }
-    std::cerr << " done." << std::endl;
 
     return *this;
 }
@@ -76,14 +110,11 @@ FFTInplaceArray& FFTInplaceArray::transform (void)
 
 FFTInplaceArray& FFTInplaceArray::transform_back (void)
 {
-    std::cerr << "Transforming BACK (" << this << ")...";
     if (m_IsTransformed)
     {
-        std::cerr << " will execute...";
         m_IsTransformed = false;
         m_FFT->execute_inverse();
     }
-    std::cerr << " done." << std::endl;
 
     return *this;
 }

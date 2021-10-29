@@ -33,7 +33,8 @@ class FFTInplaceArray
     void init(size_t minimum_size);
 
 
-    int get_lag_from (FFTInplaceArray &from);
+    int get_lag_from (FFTInplaceArray &from, double* quality = nullptr);
+    FFTInplaceArray clone(float drift = 0.0);
 
     FFTInplaceArray& transform (void);
     FFTInplaceArray& transform_back (void);
@@ -42,7 +43,7 @@ class FFTInplaceArray
     std::shared_ptr<PlanAndBuffer> m_FFT;
 
     std::complex<double>* const& envelope (void) const { return m_FFT->m_Buffer; }
-    std::complex<double>& envelope (size_t i) const { assert(i < m_ActualComplexSize); return m_FFT->m_Buffer[i]; }
+    std::complex<double>& envelope (size_t i) const { i=(i < m_ActualComplexSize)?i:(m_ActualComplexSize-1); return m_FFT->m_Buffer[i]; }
 
   protected:
     size_t m_MinimumSize;

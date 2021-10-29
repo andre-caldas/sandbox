@@ -23,8 +23,8 @@ AudioEnvelopeFFT::AudioEnvelopeFFT(Mlt::Producer& producer, size_t n_frames)
     init(n_frames);
 
     std::cerr << "Extracting audio...";
-    int frequency = 5 * producer.get_fps();
-    int channels = 1;
+    int frequency = 48000;//5 * producer.get_fps();
+    int channels = 2;
     mlt_audio_format format = mlt_audio_s16;
 
     double total = 0;
@@ -36,7 +36,7 @@ AudioEnvelopeFFT::AudioEnvelopeFFT(Mlt::Producer& producer, size_t n_frames)
         auto* data = static_cast<int16_t*>(frame->get_audio(format, frequency, channels, samples));
 
         double samples_value = 0;
-        for(int k = 0; k < samples; ++k)
+        for(int k = 0; k < samples * channels; ++k)
         {
             samples_value += std::abs(data[k]);
         }
