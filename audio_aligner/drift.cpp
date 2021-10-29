@@ -1,4 +1,5 @@
 #include <chrono>
+#include <string>
 #include <iostream>
 #include <cmath>
 
@@ -17,13 +18,13 @@ double drift_score (AudioEnvelopeFFT& x, AudioEnvelopeFFT& y, float drift)
   return quality;
 }
 
-void get_drift(const char *f1, const char *f2, const char* profile_id = nullptr)
+void get_drift(const char *f1, const char *f2, float drift_range, const char* profile_id = nullptr)
 {
-  std::cout << "/=== PROFILE: " << profile_id << " ===" << std::endl;
   if(nullptr == profile_id)
   {
     profile_id = "atsc_1080p_60";
   }
+  std::cout << "/=== PROFILE: " << profile_id << " ===" << std::endl;
   Profile profile(profile_id);
 
   Producer producer_x(profile, f1);
@@ -47,7 +48,7 @@ void get_drift(const char *f1, const char *f2, const char* profile_id = nullptr)
 
   double max_score = 0.0;
   double best_drift = 1.;
-  for(double i = -0.1; i <= +0.1; i += 0.0001)
+  for(double i = -drift_range; i <= +drift_range; i += 0.0001)
   {
     double score = drift_score(envelope_x, envelope_y, i);
     if(score > max_score)
@@ -58,6 +59,8 @@ void get_drift(const char *f1, const char *f2, const char* profile_id = nullptr)
   }
 
   std::cout << "Determined drift: " << best_drift * 100 << "%." << std::endl;
+  std::cout << "You should adjust the speed of "
+            << f2 << " to " << (1. + best_drift) * 100 << "%." << std::endl;
 }
 
 
@@ -65,7 +68,8 @@ void usage (int return_value = 0)
 {
   auto& stream = (0 == return_value) ? std::cout : std::cerr;
   stream << "Usage:" << std::endl;
-  stream << "\tdrift <file_1> <file_2> [<profile> [...]]." << std::endl;
+  stream << "\tdrift <file_1> <file_2> [<drift_range> [<profile> [...]]]." << std::endl;
+  stream << "Look for speed correction for <file_2> between (1.0 - <drift_range>) and (1.0 + <drift_range>)." << std::endl;
 }
 
 int main( int argc, const char *argv[] )
@@ -76,17 +80,23 @@ int main( int argc, const char *argv[] )
       return 1;
   }
 
-  Factory::init();
+  float drift = 0.01; // 99% to 101%.
   if(argc > 3)
   {
-    for(int i = 3; i < argc; ++i)
+    drift = std::stof(argv[3]);
+  }
+
+  Factory::init();
+  if(argc > 4)
+  {
+    for(int i = 4; i < argc; ++i)
     {
-      get_drift(argv[1], argv[2], argv[i]);
+      get_drift(argv[1], argv[2], drift, argv[i]);
     }
   }
   else
   {
-    get_drift(argv[1], argv[2]);
+    get_drift(argv[1], argv[2], drift);
   }
   Factory::close();
   return 0;

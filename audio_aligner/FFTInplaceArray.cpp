@@ -76,7 +76,7 @@ FFTInplaceArray FFTInplaceArray::clone(float drift)
     }
     else
     {
-        float factor = 1.0 + drift;
+        float factor = 1.0 / (1.0 + drift);
 
         int shift = 0;
         for(size_t i = 0; i < m_MinimumSize; ++i)
@@ -88,6 +88,7 @@ FFTInplaceArray FFTInplaceArray::clone(float drift)
                 result.envelope(i+shift) = envelope(i);
                 ++shift;
             }
+            shift = new_shift;
             result.envelope(i+shift) = envelope(i);
         }
     }
@@ -160,8 +161,6 @@ FFTInplaceArray& FFTInplaceArray::assign_correlate_with (FFTInplaceArray &assign
 
 size_t FFTInplaceArray::compute_actual_complex_size (size_t minimum_size)
 {
-    std::cerr << "Minimum size: " << minimum_size << ". ";
-
     // To always pad many zeros, so we don't get weird results... use result = 2.
     size_t result = 1;
     while(minimum_size > 0)
@@ -171,7 +170,6 @@ size_t FFTInplaceArray::compute_actual_complex_size (size_t minimum_size)
     }
 
     assert( result >= minimum_size );
-    std::cerr << "Actual size: " << result << std::endl;
     return result;
 }
 
