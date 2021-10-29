@@ -53,7 +53,5 @@ AudioEnvelopeFFT::AudioEnvelopeFFT(Mlt::Producer& producer, size_t n_frames)
     {
         envelope(i) = envelope(i) - mean;
     }
-
-    std::cerr << " Done." << std::endl;
 }
 
