@@ -8,6 +8,9 @@ The program `compare` tells you how many frames
 (in an "almost-Shotcut" notation HH:MM:SS:FF, where FF is frames)
 you need to shift the second audio in order to align it to the first one.
 
+From the debug output, you can see that what takes time is not the computation.
+The program spends most of its time extracting the audio data, frame by frame.
+
 
 === Complie ===
 > $ g++ -fPIC -I /usr/include/mlt-7 -I /usr/include/mlt-7/mlt++ -o compare compare.cpp FFTInplaceArray.cpp AudioEnvelopeFFT.cpp -Wall -Wextra -lpthread -L /usr/lib/x86_64-linux-gnu/mlt-7/ -l 'mlt++-7' -lmlt-7 -lfftw3
