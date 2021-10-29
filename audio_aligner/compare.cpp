@@ -53,7 +53,7 @@ void usage (int return_value = 0)
 {
   auto& stream = (0 == return_value) ? std::cout : std::cerr;
   stream << "Usage:" << std::endl;
-  stream << "\tcompare <file_1> <file_2> [<profile>]." << std::endl;
+  stream << "\tcompare <file_1> <file_2> [<profile> [...]]." << std::endl;
 }
 
 int main( int argc, const char *argv[] )
