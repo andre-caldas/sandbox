@@ -131,6 +131,7 @@ size_t FFTInplaceArray::compute_actual_complex_size (size_t minimum_size)
 {
     std::cerr << "Minimum size: " << minimum_size << ". ";
 
+    // To always pad many zeros, so we don't get weird results... use result = 2.
     size_t result = 1;
     while(minimum_size > 0)
     {
@@ -166,16 +167,11 @@ FFTInplaceArray::PlanAndBuffer::PlanAndBuffer (size_t size)
 
 FFTInplaceArray::PlanAndBuffer::~PlanAndBuffer(void)
 {
-    std::cerr << "I want to break free... (" << this << ")" << std::endl;
     if (nullptr != m_Buffer)
     {
-        std::cerr << "m_Buffer..." << std:: endl;
         fftw_free(reinterpret_cast<fftw_complex*>(m_Buffer));
-        std::cerr << "m_Plan..." << std:: endl;
         fftw_destroy_plan(m_Plan);
-        std::cerr << "m_InversePlan..." << std:: endl;
         fftw_destroy_plan(m_InversePlan);
     }
-    std::cerr << "(DONE) I want to break free... (" << this << ")" << std::endl;
 }
 
