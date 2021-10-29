@@ -1,4 +1,6 @@
 *.o
 *.mp4
+*.wav
 play
+compare
 *.swp
