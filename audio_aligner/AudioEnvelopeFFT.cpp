@@ -28,7 +28,7 @@ AudioEnvelopeFFT::AudioEnvelopeFFT(Mlt::Producer& producer, size_t n_frames)
     {
         // Unfortunately, we have to put this inside the loop,
         // because MLT uses them to pass parameters.
-        int frequency = 5 * producer.get_fps();
+        int frequency = 48000;
         int channels = 2;
         mlt_audio_format format = mlt_audio_s16;
 
