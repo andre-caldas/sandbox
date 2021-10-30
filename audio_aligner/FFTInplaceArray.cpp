@@ -66,17 +66,18 @@ int FFTInplaceArray::get_lag_from (FFTInplaceArray &from, double* quality)
 }
 
 
-FFTInplaceArray FFTInplaceArray::clone(float drift)
+FFTInplaceArray FFTInplaceArray::clone(double drift)
 {
     FFTInplaceArray result(m_MinimumSize);
 
-    if(0.0 == drift)
+    assert(0.0 != drift);
+    if(1.0 == drift || 0.0 == drift)
     {
         std::memcpy(envelope(), result.envelope(), m_MinimumSize * sizeof(std::complex<double>));
     }
     else
     {
-        float factor = 1.0 / (1.0 + drift);
+        double factor = 1.0 / drift;
 
         int shift = 0;
         for(size_t i = 0; i < m_MinimumSize; ++i)

@@ -34,7 +34,7 @@ class FFTInplaceArray
 
 
     int get_lag_from (FFTInplaceArray &from, double* quality = nullptr);
-    FFTInplaceArray clone(float drift = 0.0);
+    FFTInplaceArray clone(double drift = 1.0);
 
     FFTInplaceArray& transform (void);
     FFTInplaceArray& transform_back (void);
