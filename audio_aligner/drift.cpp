@@ -55,7 +55,7 @@ void get_drift_sub(FFTInplaceArray& x, FFTInplaceArray& y, double drift_range, d
   }
 
 
-  if(precision < 8)
+  if(precision < 9)
   {
     std::cout << "Drift up to now: " << best_drift * 100 << "%." << std::endl;
     get_drift_sub(x, y, drift_range/10, best_drift, precision+1);
