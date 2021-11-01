@@ -24,7 +24,7 @@ I think that this is slow when the audio is converted to the frequency of 48000H
 
 ## Complie
 
-> $ g++ -fPIC -I /usr/include/mlt-7 -I /usr/include/mlt-7/mlt++ -o drift drift.cpp FFTInplaceArray.cpp AudioEnvelopeFFT.cpp -Wall -Wextra -lpthread -L /usr/lib/x86_64-linux-gnu/mlt-7/ -l 'mlt++-7' -lmlt-7 -lfftw3
+> $ g++ -fPIC -I /usr/include/mlt-7 -I /usr/include/mlt-7/mlt++ -o "drift" "drift.cpp" FFTInplaceArray.cpp AudioEnvelopeFFT.cpp -Wall -Wextra -lpthread -L /usr/lib/x86_64-linux-gnu/mlt-7/ -l 'mlt++-7' -lmlt-7 -lfftw3 -lboost_program_options
 
 
 ## Execute
