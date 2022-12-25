@@ -59,8 +59,8 @@ zog('Matrix', M);
   function update_point (p) {
       const k = dot_product(line_normal, p);
       if(k === line_k) p.color = line_color;
-      else if(k > line_k) p.color = right_color;
-      else if(k < line_k) p.color = left_color;
+      else if(k < line_k) p.color = right_color;
+      else if(k > line_k) p.color = left_color;
   }
 
   function on_click(e) {
